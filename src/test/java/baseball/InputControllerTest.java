@@ -1,6 +1,7 @@
 package baseball;
 
 import baseball.Controller.Input.InputController;
+import baseball.View.ExceptionMessage;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
@@ -9,34 +10,58 @@ import static org.assertj.core.api.Assertions.*;
 public class InputControllerTest {
 
     @Test
-    void 정상_실행_확인() {
+    void BALL_정상_실행_확인() {
         String input = "123";
-        ArrayList<Integer> result = InputController.inputBallValidation(input);
+        ArrayList<Integer> result = InputController.validateInputBall(input);
 
         assertThat(result).containsExactly(1, 2, 3);
     }
 
     @Test
-    void 문자_입력_시_예외_발생() {
+    void BALL_문자_입력_시_예외_발생() {
         String input = "abc";
-        assertThatThrownBy(() -> InputController.inputBallValidation(input))
+        assertThatThrownBy(() -> InputController.validateInputBall(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 정수를 입력하시오.");
+                .hasMessage(ExceptionMessage.NOT_INTEGER_EXCEPTION);
     }
 
     @Test
-    void 중복_포함_시_예외_발생() {
+    void BALL_중복_포함_시_예외_발생() {
         String input = "112";
-        assertThatThrownBy(() -> InputController.inputBallValidation(input))
+        assertThatThrownBy(() -> InputController.validateInputBall(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 중복 없이 입력하시오.");
+                .hasMessage(ExceptionMessage.HAS_DEPLICATE_EXCEPTION);
     }
     @Test
-    void 세자리_벗어나면_예외_발생() {
+    void BALL_세자리_벗어나면_예외_발생() {
         String input = "1234";
-        assertThatThrownBy(() -> InputController.inputBallValidation(input))
+        assertThatThrownBy(() -> InputController.validateInputBall(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 3자리 정수를 입력하시오.");
+                .hasMessage(ExceptionMessage.LENGTH_EXCEPTION);
     }
+    @Test
+    void RESTART_문자_입력시_예외_발생() {
+        String input = "a";
+        assertThatThrownBy(() -> InputController.ValidateInputRestart(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionMessage.NOT_INTEGER_EXCEPTION);
+    }
+
+    @Test
+    void RESTART_길이_예외_발생() {
+        String input = "11";
+        assertThatThrownBy(() -> InputController.ValidateInputRestart(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionMessage.LENGTH_EXCEPTION);
+    }
+
+    @Test
+    void RESTART_1_2_외에_예외_발생() {
+        String input = "3";
+        assertThatThrownBy(() -> InputController.ValidateInputRestart(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionMessage.RESTART_FLAG_EXCEPTION);
+    }
+
 
 }
